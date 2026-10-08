@@ -5,7 +5,7 @@ from twilio.base.exceptions import TwilioRestException
 from twilio.rest import Client
 
 DEFAULT_BODY = "🚀 GitHub Actions Test: Your automated SMS pipeline is working perfectly!"
-MAX_LENGTH = 1600  # Twilio's maximum message length
+MAX_LENGTH = 1600  
 
 
 def get_config():
