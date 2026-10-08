@@ -1,14 +1,26 @@
 name: Manual SMS Sender
 
 on:
-  workflow_dispatch:           # Run manually from the Actions tab
+  workflow_dispatch:           
     inputs:
+      to_number:
+        description: "Send to (e.g. +91XXXXXXXXXX)"
+        required: true
+      from_number:
+        description: "Your Twilio number (e.g. +1415XXXXXXX)"
+        required: true
       message:
         description: "SMS text"
         required: false
         default: "Test from GitHub Actions"
-  workflow_call:               # Lets other workflows reuse this as an alert
+  workflow_call:               
     inputs:
+      to_number:
+        type: string
+        required: true
+      from_number:
+        type: string
+        required: true
       message:
         type: string
         required: false
@@ -29,13 +41,13 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install twilio
 
       - name: Execute SMS Script
         env:
           TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
           TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
-          TWILIO_PHONE_NUMBER: ${{ secrets.TWILIO_PHONE_NUMBER }}
-          MY_MOBILE_NUMBER: ${{ secrets.MY_MOBILE_NUMBER }}
+          TWILIO_PHONE_NUMBER: ${{ inputs.from_number }}
+          MY_MOBILE_NUMBER: ${{ inputs.to_number }}
           SMS_BODY: ${{ inputs.message }}
         run: python send_sms.py
